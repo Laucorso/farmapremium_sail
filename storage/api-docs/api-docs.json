@@ -1,0 +1,237 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "FARMAPREMIUM API",
+        "description": "Farmapremium API",
+        "contact": {
+            "name": "L.Cormand",
+            "email": "laucorrs@gmail.com"
+        },
+        "license": {
+            "name": "Licencia",
+            "url": "http://www.example.com/license"
+        },
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/acumulate": {
+            "post": {
+                "summary": "Acumular puntos",
+                "description": "Acumular puntos a la tarjeta de fidelización del cliente",
+                "parameters": [
+                    {
+                        "name": "client_id",
+                        "in": "query",
+                        "description": "ID del cliente",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "pharmacy_id",
+                        "in": "query",
+                        "description": "ID de la farmacia",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "points",
+                        "in": "query",
+                        "description": "Cantidad de puntos a acumular",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Puntos obtenidos en una transacción",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Puntos acumulados con éxito"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Error de validación",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "error": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/canjear-points": {
+            "post": {
+                "summary": "Canjear puntos",
+                "description": "Permite canjear puntos para un cliente para su tarjeta",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "client_id": {
+                                        "description": "ID del cliente",
+                                        "type": "integer"
+                                    },
+                                    "pharmacy_id": {
+                                        "description": "ID de la farmacia",
+                                        "type": "integer"
+                                    },
+                                    "points": {
+                                        "description": "Cantidad de puntos a canjear",
+                                        "type": "integer"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Puntos canjeados con éxito",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Puntos canjeados con éxito"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Error de validación o saldo insuficiente",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/review": {
+            "post": {
+                "summary": "Consultar puntos según Farmacia y Cliente y saldo del cliente",
+                "description": "Obtiene información sobre los puntos otorgados por una farmacia en un periodo de tiempo, también sobre los puntos otorgados por una farmacia y por cliente, y el saldo del cliente",
+                "parameters": [
+                    {
+                        "name": "pharmacy_id",
+                        "in": "query",
+                        "description": "ID de la farmacia",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "client_id",
+                        "in": "query",
+                        "description": "ID del cliente",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "start_date",
+                        "in": "query",
+                        "description": "Fecha de inicio (Formato: Y-m-d)",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "date"
+                        }
+                    },
+                    {
+                        "name": "end_date",
+                        "in": "query",
+                        "description": "Fecha de fin (Formato: Y-m-d)",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "date"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Información sobre los puntos otorgados y el saldo del cliente",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "given_points_dates": {
+                                            "type": "mixed"
+                                        },
+                                        "given_points_client": {
+                                            "type": "mixed"
+                                        },
+                                        "client_card_balance": {
+                                            "type": "integer"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Error de validación",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
